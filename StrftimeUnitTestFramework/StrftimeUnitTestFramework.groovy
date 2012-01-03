@@ -27,13 +27,25 @@ class JsUnitTestServer extends AbstractHandler {
     
     def path
 
+    def jsFiles = [
+        'js/strftime.js',
+        'js/strftime_test.js',
+        'js/assertion.js'
+    ]
+
     def js = [:]
 
     JsUnitTestServer() {
         super()
         this.path = definePath()
-        js << ['/js/strftime.js' : new File("${path}js/strftime.js")]
-        js << ['/js/strftime_test.js' : new File("${path}js/strftime_test.js")]
+        jsFiles.each {
+            def req = "/${it}".toString()
+            js[req] = new File("${path}${it}")
+        }
+        println 'js prepared'
+        js.each {k, v ->
+            println "$k : $v"
+        }
     }
 
     @Override
