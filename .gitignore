@@ -1,0 +1,17 @@
+StrftimeUnitTestFramework/.idea/
+*.iml
+*~
+*.log
+*.iws
+*.ipr
+.classpath
+.project
+.settings
+.metadata
+bin
+out
+target
+*/target
+/build
+*/build
+.nbattrs
