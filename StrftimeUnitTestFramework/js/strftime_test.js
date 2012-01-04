@@ -14,8 +14,8 @@ try {
     assert('%y should return year as two digits', date.strftime('%y') === '09')
     assert('%F should return act as %Y-%m-%d', date.strftime('%F') === '2009-10-05');
 
-    console.log(assert.count + ' tests OK');
+    showSingleResult(assert.count + 'tests OK', Result.succeed);
 } catch (e) {
-    console.log('Test failed: ' + e.message);
+    showSingleResult('Test failed: ' + e.message, Result.failure);
 }
 
