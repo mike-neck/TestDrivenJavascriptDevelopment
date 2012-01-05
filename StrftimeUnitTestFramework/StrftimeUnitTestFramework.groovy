@@ -30,7 +30,9 @@ class JsUnitTestServer extends AbstractHandler {
     def jsFiles = [
         'js/strftime.js',
         'js/strftime_test.js',
-        'js/assertion.js'
+        'js/assertion.js',
+        'js/display.js',
+        'js/testcase.js'
     ]
 
     def js = [:]
