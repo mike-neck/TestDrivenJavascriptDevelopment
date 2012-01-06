@@ -11,7 +11,9 @@ function testCase (name, tests) {
     var successful = 0,
         testCount = 0,
         test,
-        color;
+        color,
+        hasSetup = (typeof tests.setUp === 'function')? true : false,
+        hasTeardown = (typeof tests.tearDown === 'function')? true : false;
 
     for (test in tests) {
         if (!/^test/.test(test)) {
@@ -21,8 +23,17 @@ function testCase (name, tests) {
         testCount += 1;
 
         try {
+            if (hasSetup) {
+                tests.setUp();
+            }
+
             tests[test] ();
             showSingleResult(test, Result.succeed);
+
+            if (hasTeardown) {
+                tests.tearDown();
+            }
+
             successful += 1;
         } catch (e) {
             showSingleResult(test + ' failed : ' + e.message, Result.failure);
