@@ -1,5 +1,7 @@
 class ConstantPath {
-    static final String serverPath = 'C:/Users/mike/repo/TestDrivenJavascriptDevelopment/StrftimeUnitTestFramework/'
+    static final String serverPath = 'C:/Users/mike/repo/TestDrivenJavascriptDevelopment/StringTrim/'
+    static final String serverName = 'StringTrim'
+    static final String rootFile = 'string_trim.html'
 }
 
 @Grab('org.eclipse.jetty:jetty-server:7.5.4.v20111024')
@@ -18,8 +20,9 @@ def server = new Server(inet)
 class JsUnitTestServer extends AbstractHandler {
 
     def definePath = {
-        def path = new File('strftime.html').getAbsolutePath().replace('strftime.html', '')
-        if (path.contains('StrftimeUnitTestFramework') == false) {
+        def html = new File(ConstantPath.getRootFile())
+        def path = html.getAbsolutePath().replace(ConstantPath.getRootFile(), '')
+        if (path.contains(ConstantPath.getServerName()) == false) {
             path = ConstantPath.getServerPath()
         }
         path
@@ -27,13 +30,14 @@ class JsUnitTestServer extends AbstractHandler {
     
     def path
 
-    def jsFiles = [
-        'js/strftime.js',
-        'js/strftime_test.js',
-        'js/assertion.js',
-        'js/display.js',
-        'js/testcase.js'
-    ]
+    def jsEntry = {
+        def jsDir = "${definePath()}/js".toString()
+	def jsFiles = []
+	new File(jsDir).eachFile(FileType.FILES) {
+	    jsFiles << it
+	}
+	jsFiles
+    }
 
     def js = [:]
 
