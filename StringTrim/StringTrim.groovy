@@ -92,6 +92,9 @@ class JsUnitTestServer extends AbstractHandler {
                 }
                 body() {
                     h1('server finished')
+                    p {
+                        a(href : 'http://localhost:3309', 'go to test page')
+                    }
                 }
             }
             res.writer << w.toString()
