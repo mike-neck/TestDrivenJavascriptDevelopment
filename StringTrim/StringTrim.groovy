@@ -30,7 +30,7 @@ class JsUnitTestServer extends AbstractHandler {
     }
 
     def jsEntry = {
-        def dir = ['js', 'test']
+        def dir = ['js', 'tests']
 
         def jsFiles = [:]
 
