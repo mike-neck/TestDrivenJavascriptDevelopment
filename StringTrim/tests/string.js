@@ -6,4 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
+String.prototype.trim = function () {
+    return this.replace(/^\s+/, "");
+};
