@@ -30,13 +30,15 @@ class JsUnitTestServer extends AbstractHandler {
     }
 
     def jsEntry = {
-        def jsDir = "${definePath()}js".toString()
-        println jsDir
+        def dir = ['js', 'test']
 
         def jsFiles = [:]
 
-        new File(jsDir).eachFile(FileType.FILES) {
-            jsFiles["/${it.getName()}".toString()] = it
+        dir.each {
+            def jsDir = "${definePath()}${it}".toString()
+            new File(jsDir).eachFile(FileType.FILES) {
+                jsFiles["/${it.getName()}".toString()] = it
+            }
         }
         jsFiles
     }
