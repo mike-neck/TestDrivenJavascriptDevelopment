@@ -12,6 +12,12 @@ testCase(
                 "trim() should remove leading white-space",
                 "a string" === "  a string".trim()
             );
+        },
+        "test trim should remove trailing white-space" : function () {
+            assert(
+                "trim() should remove trailing white-space",
+                "a string" === "a string    ".trim()
+            );
         }
     }
 );
