@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.Request
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import groovy.xml.MarkupBuilder
+import groovy.io.FileType
 
 def inet = new InetSocketAddress('localhost', 3309)
 def server = new Server(inet)
@@ -27,27 +28,24 @@ class JsUnitTestServer extends AbstractHandler {
         }
         path
     }
-    
-    def path
 
     def jsEntry = {
-        def jsDir = "${definePath()}/js".toString()
-	def jsFiles = []
-	new File(jsDir).eachFile(FileType.FILES) {
-	    jsFiles << it
-	}
-	jsFiles
+        def jsDir = "${definePath()}js".toString()
+        println jsDir
+
+        def jsFiles = [:]
+
+        new File(jsDir).eachFile(FileType.FILES) {
+            jsFiles["/${it.getName()}".toString()] = it
+        }
+        jsFiles
     }
 
     def js = [:]
 
     JsUnitTestServer() {
         super()
-        this.path = definePath()
-        jsFiles.each {
-            def req = "/${it}".toString()
-            js[req] = new File("${path}${it}")
-        }
+        js = jsEntry()
         println 'js prepared'
         js.each {k, v ->
             println "$k : $v"
@@ -65,9 +63,18 @@ class JsUnitTestServer extends AbstractHandler {
             res.setStatus(200)
             res.setContentType('text/html')
             def w = res.writer
-            new File("${path}strftime.html").eachLine {
-                w << it
-                w << '\n'
+            w << '<!DOCTYPE html>\n'
+            def doc = new MarkupBuilder(w)
+            doc.html(lang : 'ja') {
+                head {
+                    title('string trim test')
+                    meta('http-equiv' : 'Content-Type', content : 'text/html;cahrset=utf-8')
+                }
+                body {
+                    js.each {k, v ->
+                        script(type : 'text/javascript', src : "${k}", '' )
+                    }
+                }
             }
             w.flush()
         } else if ('/end'.equals(target)) {
@@ -89,7 +96,8 @@ class JsUnitTestServer extends AbstractHandler {
             res.writer.flush()
             server.stop()
             server.destroy()
-        } else if (js.containsKey(target)) {
+        } else if (js.containsKey("${target}".toString())) {
+            println "found ${target}"
             res.setStatus(200)
             res.setContentType('text/javascript')
             def file = js[target]
@@ -98,6 +106,7 @@ class JsUnitTestServer extends AbstractHandler {
             }
             res.writer.flush()
         } else {
+            println "not found ${target}"
             res.setStatus(404)
         }
     }
